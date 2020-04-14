@@ -21,6 +21,11 @@ bool initialize_window(void)
         return false;
     }
 
+    SDL_DisplayMode display_mode;
+    SDL_GetCurrentDisplayMode(0, &display_mode);
+    window_width = display_mode.w;
+    window_height = display_mode.h;
+
     // Create SDL Window
     window = SDL_CreateWindow(
         NULL,
@@ -86,6 +91,38 @@ void update(void)
 {
 }
 
+void draw_grid(int offset, uint32_t grid_color)
+{
+    // Draw Horizontal Lines
+    for (int y = 0; y < window_height; y += offset)
+    {
+        for (int x = 0; x < window_width; x += 1)
+        {
+            color_buffer[(window_width * y) + x] = grid_color;
+        }
+    }
+
+    // Draw Vertical Lines
+    for (int y = 0; y < window_height; y += 1)
+    {
+        for (int x = 0; x < window_width; x += offset)
+        {
+            color_buffer[(window_width * y) + x] = grid_color;
+        }
+    }
+}
+
+void draw_rect(int x_pos, int y_pos, int width, int height, uint32_t color)
+{
+    for (int y = y_pos; y <= (y_pos + height); y += 1)
+    {
+        for (int x = x_pos; x <= (x_pos + width); x += 1)
+        {
+            color_buffer[(window_width * y) + x] = color;
+        }
+    }
+}
+
 void render_color_buffer(void)
 {
     SDL_UpdateTexture(
@@ -113,8 +150,11 @@ void render(void)
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderClear(renderer);
 
+    draw_grid(25, 0xFF666666);
+    draw_rect(100, 100, 600, 300, 0xFFFF00FF);
+
     render_color_buffer();
-    clear_color_buffer(0xFFFFFF00);
+    clear_color_buffer(0xFF333333);
 
     SDL_RenderPresent(renderer);
 }
