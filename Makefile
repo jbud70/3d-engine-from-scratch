@@ -1,8 +1,8 @@
 build:
-	gcc -Wall -std=c99 ./src/*.c -lSDL2 -o renderer
+	gcc -Wall -std=c99 ./src/*.c -lSDL2 -o ./bin/renderer
 
 run:
-	./renderer
+	./bin/renderer
 
 clean:
-	rm renderer
+	rm ./bin/renderer
