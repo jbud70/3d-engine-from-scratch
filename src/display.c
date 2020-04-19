@@ -48,6 +48,14 @@ bool initialize_window(void)
     return true;
 }
 
+void draw_pixel(int x, int y, uint32_t color)
+{
+    if (x >= 0 && x <= window_width && y >= 0 && y <= window_height)
+    {
+        color_buffer[(window_width * y) + x] = color;
+    }
+}
+
 void draw_grid(int offset, uint32_t grid_color)
 {
     // Draw Horizontal Lines
@@ -55,7 +63,7 @@ void draw_grid(int offset, uint32_t grid_color)
     {
         for (int x = 0; x < window_width; x += 1)
         {
-            color_buffer[(window_width * y) + x] = grid_color;
+            draw_pixel(x, y, grid_color);
         }
     }
 
@@ -75,7 +83,7 @@ void draw_rect(int x_pos, int y_pos, int width, int height, uint32_t color)
     {
         for (int x = x_pos; x <= (x_pos + width); x += 1)
         {
-            color_buffer[(window_width * y) + x] = color;
+            draw_pixel(x, y, color);
         }
     }
 }
@@ -97,7 +105,7 @@ void clear_color_buffer(uint32_t color)
     {
         for (int x = 0; x < window_width; x++)
         {
-            color_buffer[(window_width * y) + x] = color;
+            draw_pixel(x, y, color);
         }
     }
 }
