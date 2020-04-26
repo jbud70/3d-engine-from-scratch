@@ -11,6 +11,8 @@
         "*.INCLUDE*": "pl1",
         "*.JCL*": "jcl",
         "cmath": "c",
-        "complex": "c"
+        "complex": "c",
+        "__tuple": "c",
+        "array": "c"
     }
 }
