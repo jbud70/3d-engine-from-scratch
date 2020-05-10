@@ -5,9 +5,9 @@
 
 triangle_t *triangles_to_render = NULL;
 
-vec3_t camera_position = {.x = 0, .y = 0, .z = -5};
+vec3_t camera_position = {.x = 0, .y = 0, .z = 0};
 
-const float fov_factor = 1280.0;
+const float fov_factor = 800.0;
 
 bool is_running = false;
 int previous_frame_time = 0;
@@ -85,6 +85,9 @@ void update(void)
 
         triangle_t projected_triangle;
 
+        vec3_t transformed_vertices[3];
+
+        // Transform vertices
         for (int j = 0; j < 3; j++)
         {
             vec3_t transformed_vertex = face_vertices[j];
@@ -94,9 +97,37 @@ void update(void)
             transformed_vertex = vec3_rotate_z(transformed_vertex, mesh.rotation.z);
 
             // Transform for camera position
-            transformed_vertex.z += camera_position.z;
+            transformed_vertex.z += 5;
 
-            vec2_t projected_point = project(transformed_vertex);
+            transformed_vertices[j] = transformed_vertex;
+        }
+
+        // Cull faces
+        vec3_t vector_a = transformed_vertices[0];
+        vec3_t vector_b = transformed_vertices[1];
+        vec3_t vector_c = transformed_vertices[2];
+
+        vec3_t vector_ab = vec3_sub(vector_b, vector_a);
+        vec3_t vector_ac = vec3_sub(vector_c, vector_a);
+        vec3_normalize(&vector_ab);
+        vec3_normalize(&vector_ac);
+
+        vec3_t normal = vec3_cross(vector_ab, vector_ac);
+        vec3_normalize(&normal);
+
+        vec3_t cam_vec = vec3_sub(camera_position, vector_a);
+        float dot_product = vec3_dot(cam_vec, normal);
+
+        if (dot_product <= 0)
+        {
+            continue;
+        }
+
+        // Project vertices
+        for (int j = 0; j < 3; j++)
+        {
+
+            vec2_t projected_point = project(transformed_vertices[j]);
 
             // Transform and scale
             projected_point.x += (window_width / 2);

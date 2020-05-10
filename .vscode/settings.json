@@ -13,6 +13,8 @@
         "cmath": "c",
         "complex": "c",
         "__tuple": "c",
-        "array": "c"
+        "array": "c",
+        "__locale": "c",
+        "functional": "c"
     }
 }
